@@ -20,9 +20,7 @@
             "outputPath": "dist/quick-shop",
             "index": "src/index.html",
             "browser": "src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js", "src/app-polyfills.ts"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -31,9 +29,7 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.scss"
-            ],
+            "styles": ["src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -78,10 +74,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
+            "polyfills": ["zone.js", "zone.js/testing", "src/app-polyfills.ts"],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -90,13 +83,14 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.scss"
-            ],
+            "styles": ["src/styles.scss"],
             "scripts": []
           }
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "e0a82fc2-5bea-4342-9d1f-7d84c6c2fc47"
   }
 }
