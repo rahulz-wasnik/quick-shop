@@ -1,0 +1,4 @@
+export enum AUTHENTICATION {
+  LOGIN_SUCCESS,
+  LOGOUT_SUCCESS,
+}

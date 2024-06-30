@@ -14,7 +14,7 @@ export class AppComponent {
 
   login(): void {
     this.cognitoService
-      .signIn({ username: 'rahul@qs.com', password: 'Quickshop@12' })
+      .signIn('rahul@qs.com', 'Quickshop@12')
       .then((response) => {
         console.log(response);
       });
