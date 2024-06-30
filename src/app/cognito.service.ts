@@ -1,33 +1,46 @@
-import { Injectable } from '@angular/core';
-import { Amplify } from 'aws-amplify';
-import { signIn, type SignInInput, signOut } from 'aws-amplify/auth';
+import { Injectable, signal, effect } from '@angular/core';
+import { Amplify, Auth } from 'aws-amplify';
 import { environment } from '../environments/environment';
-import { getCurrentUser } from 'aws-amplify/auth';
 import { CognitoUser, CognitoUserPool } from 'amazon-cognito-identity-js';
+import { AUTHENTICATION } from './authentication-enum';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CognitoService {
+  static readonly BEARER: string = 'bearer';
+
+  authenticationStatus = signal<AUTHENTICATION | undefined>(undefined);
+
+  postLogInAndLogOutEffect = effect(() => {
+    if (this.authenticationStatus() == AUTHENTICATION.LOGIN_SUCCESS) {
+      Auth.currentSession().then((session) => {
+        localStorage.setItem(
+          CognitoService.BEARER,
+          session.getIdToken().getJwtToken()
+        );
+      });
+    } else if (this.authenticationStatus() == AUTHENTICATION.LOGOUT_SUCCESS) {
+      localStorage.removeItem(CognitoService.BEARER);
+    }
+  });
+
   constructor() {
     Amplify.configure({
       Auth: {
-        Cognito: {
-          signUpVerificationMethod: 'code',
-          loginWith: {
-            username: true,
-            email: true,
-          },
-          ...environment.cognito,
-        },
+        region: 'ap-south-1',
+        userPoolId: environment.userPoolId,
+        userPoolWebClientId: environment.userPoolWebClientId,
+        localStorage: window.localStorage,
       },
     });
   }
 
-  signIn({ username, password }: SignInInput): Promise<any> {
+  signIn(username: string, password: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      signIn({ username, password })
+      Auth.signIn({ username, password })
         .then((result) => {
+          this.authenticationStatus.set(AUTHENTICATION.LOGIN_SUCCESS);
           resolve(result);
         })
         .catch((e) => reject(e));
@@ -36,33 +49,34 @@ export class CognitoService {
 
   signOut(): Promise<any> {
     const userPool: CognitoUserPool = new CognitoUserPool({
-      ClientId: environment.cognito.userPoolClientId,
-      UserPoolId: environment.cognito.userPoolId,
+      ClientId: environment.userPoolWebClientId,
+      UserPoolId: environment.userPoolId,
     });
 
     return new Promise((resolve, reject): void => {
       const cognitoUser: CognitoUser | null = userPool.getCurrentUser();
-      console.log('cognito user', cognitoUser);
       if (cognitoUser) {
         cognitoUser.getSession((err: Error) => {
-          console.log('err in cognito user session', err);
           if (err) {
             reject(err);
           }
         });
         cognitoUser.globalSignOut({
           onFailure: reject,
-          onSuccess: resolve,
+          onSuccess: () => {
+            this.authenticationStatus.set(AUTHENTICATION.LOGOUT_SUCCESS);
+            resolve('Logged out');
+          },
         });
       } else {
-        resolve('user not logged in or session expired');
+        resolve('User not logged in or session expired');
       }
     });
   }
 
   async globalSignout() {
     try {
-      await signOut();
+      await Auth.signOut({ global: true });
     } catch (error) {
       console.log('error signing out: ', error);
     }
