@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CognitoService } from './cognito.service';
+import { ProductService } from './product.service';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +11,8 @@ import { CognitoService } from './cognito.service';
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  constructor(private cognitoService: CognitoService) {}
+  private cognitoService: CognitoService = inject(CognitoService);
+  private productService: ProductService = inject(ProductService);
 
   login(): void {
     this.cognitoService
@@ -26,5 +28,9 @@ export class AppComponent {
 
   globalLogout(): void {
     this.cognitoService.globalSignout().then((res) => console.log(res));
+  }
+
+  getProducts(): void {
+    this.productService.getProducts().subscribe((res) => console.log(res));
   }
 }
