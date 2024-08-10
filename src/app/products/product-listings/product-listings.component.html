@@ -1,0 +1,10 @@
+<p>Product works</p>
+@for (product of products(); track product.id) {
+<div>
+  <button type="button" (click)="productId.set(product.id)">
+    {{ product.name }}
+  </button>
+</div>
+} @empty {
+<h1>no products found</h1>
+}

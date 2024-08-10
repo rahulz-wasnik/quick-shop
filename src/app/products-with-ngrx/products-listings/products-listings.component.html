@@ -1,0 +1,19 @@
+@for (product of products; track product.id) {
+<div>
+  <button type="button">
+    {{ product.name }}
+  </button>
+</div>
+} @empty {
+<h1>no products found</h1>
+}
+
+<h1>From signal selectors</h1>
+
+@for (product of productsFromSignal(); track product.id) {
+<div>
+  <button type="button">{{ product.name }}</button>
+</div>
+} @empty {
+<h1>no products found</h1>
+}

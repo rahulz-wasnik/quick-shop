@@ -1,0 +1,12 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "Iphone 13 mini",
+      "category": "Electronics",
+      "subCategory": "Mobile",
+      "price": 75000,
+      "unitsSoldInLastMonth": 500
+    }
+  ]
+}

@@ -1,4 +1,14 @@
-<button (click)="login()">Login</button>
+<!-- <button (click)="login()">Login</button>
 <button (click)="logout()">Logout</button>
 <button (click)="globalLogout()">Global Logout</button>
-<button (click)="getProducts()">Get products</button>
+<button (click)="getProducts()">Get products</button> -->
+
+<button type="button" routerLink="/products">Products</button>
+<button type="button" routerLink="/products-with-ngrx">
+  Products With Ngrx
+</button>
+<button type="button" routerLink="/home">Home</button>
+
+<router-outlet></router-outlet>
+
+<!-- <app-content-projection-parent></app-content-projection-parent> -->

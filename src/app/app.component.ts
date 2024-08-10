@@ -1,18 +1,17 @@
 import { Component, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { CognitoService } from './cognito.service';
-import { ProductService } from './product.service';
+import { ContentProjectionParentComponent } from './content-projection/content-projection-parent/content-projection-parent.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, RouterLink, ContentProjectionParentComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
   private cognitoService: CognitoService = inject(CognitoService);
-  private productService: ProductService = inject(ProductService);
 
   login(): void {
     this.cognitoService
@@ -30,7 +29,5 @@ export class AppComponent {
     this.cognitoService.globalSignout().then((res) => console.log(res));
   }
 
-  getProducts(): void {
-    this.productService.getProducts().subscribe((res) => console.log(res));
-  }
+  getProducts(): void {}
 }

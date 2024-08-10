@@ -1,0 +1,26 @@
+<div class="header">
+  <ng-content select="[slot='header']"> No header </ng-content>
+</div>
+<div class="ngProjectAsEx">
+  <ng-content select="[projectedHeader]"> No projected header </ng-content>
+</div>
+<div class="content">
+  <ng-content>
+    <p>No content</p>
+    <app-widget-button>
+      <!-- 
+         Content reprojection, content from parent component is being projected here and this 
+         projected content is being reprojected in the widget button component. So the initial 
+         slot='icon' from parent component is visible here but its not visible inside the widget 
+         button component. Due to this it will not be re projected into widget button component. 
+         Inorder to achieve this it needs to be reprojected with the name [slot='icon'] since thats 
+         how its being referenced inside the widget button component. Its for this reason being 
+         reprojected using ngProjectAs property here
+         -->
+      <ng-content
+        ngProjectAs="[slot='icon']"
+        select="[slot='icon']"
+      ></ng-content>
+    </app-widget-button>
+  </ng-content>
+</div>
